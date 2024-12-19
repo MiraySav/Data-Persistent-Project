@@ -6,12 +6,30 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     private Rigidbody m_Rigidbody;
+    private bool isStuck = false;
+    private Transform paddle;
+
 
     void Start()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
     }
-    
+    private void Update()
+    {
+        if (isStuck && Input.GetKeyDown(KeyCode.Space))
+        {
+            isStuck = false;
+            transform.SetParent(null);
+            GetComponent<Rigidbody>().isKinematic = false; 
+        }
+    }
+    public void StickToPlatform(Transform newPlatform)
+    {
+        isStuck = true;
+        paddle = newPlatform;
+        transform.SetParent(paddle); 
+        GetComponent<Rigidbody>().isKinematic = true;
+    }
     private void OnCollisionExit(Collision other)
     {
         var velocity = m_Rigidbody.velocity;
@@ -33,4 +51,12 @@ public class Ball : MonoBehaviour
 
         m_Rigidbody.velocity = velocity;
     }
+
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Player"))
+    //    {
+    //        Debug.Log("Ball hit the paddle!");
+    //    }
+    //}
 }

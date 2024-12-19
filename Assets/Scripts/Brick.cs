@@ -6,8 +6,10 @@ using UnityEngine.Events;
 
 public class Brick : MonoBehaviour
 {
+    public GameObject[] powerupsPrefabs;
     public UnityEvent<int> onDestroyed;
-    
+
+    public SharedFiles.Powerups powerup;
     public int PointValue;
 
     void Start()
@@ -36,7 +38,10 @@ public class Brick : MonoBehaviour
     private void OnCollisionEnter(Collision other)
     {
         onDestroyed.Invoke(PointValue);
-        
+        if (powerup != 0)
+        {
+            Instantiate(powerupsPrefabs[(int)powerup], transform.position, powerupsPrefabs[(int)powerup].transform.rotation);
+        }
         //slight delay to be sure the ball have time to bounce
         Destroy(gameObject, 0.2f);
     }
