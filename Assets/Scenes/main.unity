@@ -135,9 +135,8 @@ GameObject:
   - component: {fileID: 97436044}
   - component: {fileID: 97436043}
   - component: {fileID: 97436042}
-  - component: {fileID: 97436046}
   - component: {fileID: 97436047}
-  - component: {fileID: 97436048}
+  - component: {fileID: 97436046}
   m_Layer: 0
   m_Name: Paddle
   m_TagString: Player
@@ -236,8 +235,8 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 120
-  m_CollisionDetection: 2
+  m_Constraints: 0
+  m_CollisionDetection: 3
 --- !u!114 &97436047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,19 +251,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 4
   MaxMovement: 2
---- !u!135 &97436048
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 97436041}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  hasStickyPower: 0
+  MainManager: {fileID: 450625942}
 --- !u!1 &177912857
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,7 +365,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 8
-  m_CollisionDetection: 2
+  m_CollisionDetection: 3
 --- !u!114 &177912863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -390,6 +378,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9378aa3f6eac646479e54cd5932ffd3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 450625942}
 --- !u!1 &188020404
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,7 +503,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BrickPrefab: {fileID: 897975713663390409, guid: 63f25b9733d2bcd4fa2ff6de1264c739, type: 3}
   LineCount: 6
-  Ball: {fileID: 177912862}
+  isSticky: 0
+  Ballrb: {fileID: 177912862}
+  ball: {fileID: 177912863}
+  paddle: {fileID: 97436041}
   ScoreText: {fileID: 188020406}
   playerNameText: {fileID: 2078529056}
   GameOverText: {fileID: 474497238}
@@ -1379,7 +1371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blueExtraBallsPowerup: {fileID: 8536848502622156507, guid: 0d90d19283609d940b637af160a8981b, type: 3}
   pinkStickyBallsPowerup: {fileID: 4344529736641134511, guid: 4bb0d8c6f8599a7468e029ca95ba4d81, type: 3}
-  mainManager: {fileID: 0}
+  mainManager: {fileID: 450625942}
   ball: {fileID: 177912863}
   paddle: {fileID: 97436047}
   effectTime: 5

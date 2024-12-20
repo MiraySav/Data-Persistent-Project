@@ -79,7 +79,6 @@ public class NameManager : MonoBehaviour
         {
             string json = File.ReadAllText(lastNamePath);
             SaveLastName data = JsonUtility.FromJson<SaveLastName>(json);
-            Debug.Log(data.lastPlayerName);
             lastPlayerName = data.lastPlayerName;
 
         }

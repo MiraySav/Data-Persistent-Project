@@ -9,7 +9,10 @@ public class MainManager : MonoBehaviour
 
     public Brick BrickPrefab;
     public int LineCount = 6;
-    public Rigidbody Ball;
+    public bool isSticky;
+    public Rigidbody Ballrb;
+    public Ball ball;
+    public GameObject paddle;
 
     public Text ScoreText;
     public Text playerNameText;
@@ -20,11 +23,14 @@ public class MainManager : MonoBehaviour
     private int m_Points;
 
     private bool m_GameOver = false;
+    private bool isMultipleBallsActive;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        isMultipleBallsActive = false;
+        isSticky = false;
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
 
@@ -41,27 +47,44 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
                 if (x == indexOfPowerup)
                 {
+
                     brick.GetComponent<Brick>().powerup = SharedFiles.Powerups.sticky;
+                    //brick.GetComponent<Brick>().powerup = SharedFiles.Powerups.threeBalls;
+
                 }
+
             }
         }
 
         UpdateHighScore();
     }
+    public void OnThreeBallsActivate()
+    {
+        ball.SpawnMultipleBalls(2); 
+        StartCoroutine(ThreeBallsTimer());
+    }
+
+    IEnumerator ThreeBallsTimer()
+    {
+        isMultipleBallsActive = true ;
+        yield return new WaitForSeconds(2);
+        isMultipleBallsActive = false ;
+    }
 
     private void Update()
     {
-        if (!m_Started)
+        if (!m_Started || isSticky)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                isSticky = false;
                 m_Started = true;
                 float randomDirection = Random.Range(-1.0f, 1.0f);
                 Vector3 forceDir = new Vector3(randomDirection, 1, 0);
                 forceDir.Normalize();
 
-                Ball.transform.SetParent(null);
-                Ball.AddForce(forceDir * 2.0f, ForceMode.VelocityChange);
+                Ballrb.transform.SetParent(null);
+                Ballrb.AddForce(forceDir * 2.0f, ForceMode.VelocityChange);
             }
         }
         else if (m_GameOver)
@@ -72,6 +95,11 @@ public class MainManager : MonoBehaviour
             }
         }
 
+
+    }
+    public void OnStick()
+    {
+        isSticky = true;
 
     }
     void UpdateHighScore()
@@ -98,7 +126,12 @@ public class MainManager : MonoBehaviour
 
     public void GameOver()
     {
-        m_GameOver = true;
+        if (isMultipleBallsActive == true)
+        {
+            m_GameOver = false;
+        }
+        else if (isMultipleBallsActive == false) 
+        { m_GameOver = true; }
         UpdateHighScore();
         GameOverText.SetActive(true);
     }

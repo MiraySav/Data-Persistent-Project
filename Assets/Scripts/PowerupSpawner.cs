@@ -31,7 +31,7 @@ public class PowerupSpawner : MonoBehaviour
 
             GameObject powerUpToSpawn = Random.value > 0.5f ? blueExtraBallsPowerup : pinkStickyBallsPowerup;
 
-            Instantiate(powerUpToSpawn, GenerateSpawnPosition(), powerUpToSpawn.transform.rotation);
+            Instantiate(powerUpToSpawn,GenerateSpawnPosition(), powerUpToSpawn.transform.rotation);
             nextSpawnTime = Time.deltaTime + Random.Range(5f, 15f);
         }
        
@@ -43,8 +43,9 @@ public class PowerupSpawner : MonoBehaviour
         return spawnPos;
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
+        Debug.Log("triggered");
         if (other.CompareTag("Player") && hasPowerup)
         {
             for (int i = 0; i < 2; i++) // Create 2 additional balls
@@ -66,4 +67,5 @@ public class PowerupSpawner : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
 }

@@ -1,17 +1,21 @@
-using System;
+//using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 public class Ball : MonoBehaviour
 {
     private Rigidbody m_Rigidbody;
     private bool isStuck = false;
     private Transform paddle;
+    public MainManager manager;
+    private bool shouldStickAgain;
 
 
     void Start()
     {
+        shouldStickAgain = true;
         m_Rigidbody = GetComponent<Rigidbody>();
     }
     private void Update()
@@ -19,16 +23,36 @@ public class Ball : MonoBehaviour
         if (isStuck && Input.GetKeyDown(KeyCode.Space))
         {
             isStuck = false;
+            shouldStickAgain = false;
+            Invoke("SetShouldStickAgainToTrue", 2f);
             transform.SetParent(null);
-            GetComponent<Rigidbody>().isKinematic = false; 
+            GetComponent<Rigidbody>().isKinematic = false;
         }
     }
+    
     public void StickToPlatform(Transform newPlatform)
     {
-        isStuck = true;
-        paddle = newPlatform;
-        transform.SetParent(paddle); 
-        GetComponent<Rigidbody>().isKinematic = true;
+            isStuck = true;
+            paddle = newPlatform;
+            transform.SetParent(paddle);
+            m_Rigidbody.velocity = Vector3.zero;
+            m_Rigidbody.isKinematic = true;
+    }
+
+    public void SpawnMultipleBalls(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            GameObject newBall = Instantiate(gameObject, transform.position, Quaternion.identity);
+            Rigidbody newBallRb = newBall.GetComponent<Rigidbody>();
+
+            if (newBallRb != null)
+            {
+                Vector3 randomDirection = m_Rigidbody.velocity + new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), 0);
+                randomDirection.Normalize();
+                newBallRb.velocity = randomDirection * m_Rigidbody.velocity.magnitude;
+            }
+        }
     }
     private void OnCollisionExit(Collision other)
     {
@@ -52,11 +76,21 @@ public class Ball : MonoBehaviour
         m_Rigidbody.velocity = velocity;
     }
 
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Player"))
-    //    {
-    //        Debug.Log("Ball hit the paddle!");
-    //    }
-    //}
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+          bool isPaddleSticky =  collision.gameObject.GetComponent<Paddle>().hasStickyPower;
+            if (isPaddleSticky && shouldStickAgain)
+            {
+                StickToPlatform(collision.transform);
+                manager.isSticky = true;
+            }
+        }
+    }
+
+    void SetShouldStickAgainToTrue()
+    {
+        shouldStickAgain = true;
+    }
 }
