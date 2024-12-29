@@ -269,7 +269,7 @@ GameObject:
   - component: {fileID: 177912863}
   m_Layer: 0
   m_Name: Ball
-  m_TagString: Untagged
+  m_TagString: Ball
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -379,6 +379,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   manager: {fileID: 450625942}
+  ballcount: 3
+  isMainBall: 0
 --- !u!1 &188020404
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,12 +507,15 @@ MonoBehaviour:
   LineCount: 6
   isSticky: 0
   Ballrb: {fileID: 177912862}
-  ball: {fileID: 177912863}
+  ballPrefab: {fileID: 177912863}
+  activeBalls: []
   paddle: {fileID: 97436041}
   ScoreText: {fileID: 188020406}
   playerNameText: {fileID: 2078529056}
   GameOverText: {fileID: 474497238}
   highScoreText: {fileID: 2078529056}
+  m_GameOver: 0
+  isMultipleBallsActive: 0
 --- !u!1 &455529321
 GameObject:
   m_ObjectHideFlags: 0
@@ -884,7 +889,7 @@ GameObject:
   - component: {fileID: 1066359104}
   m_Layer: 0
   m_Name: DeathZone
-  m_TagString: Untagged
+  m_TagString: DeathZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295

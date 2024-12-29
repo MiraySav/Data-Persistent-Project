@@ -11,7 +11,8 @@ public class MainManager : MonoBehaviour
     public int LineCount = 6;
     public bool isSticky;
     public Rigidbody Ballrb;
-    public Ball ball;
+    public Ball ballPrefab;
+    public List<Ball> activeBalls = new List<Ball>();
     public GameObject paddle;
 
     public Text ScoreText;
@@ -22,8 +23,8 @@ public class MainManager : MonoBehaviour
     private bool m_Started = false;
     private int m_Points;
 
-    private bool m_GameOver = false;
-    private bool isMultipleBallsActive;
+    public bool m_GameOver = false;
+    public bool isMultipleBallsActive;
 
 
     // Start is called before the first frame update
@@ -31,6 +32,7 @@ public class MainManager : MonoBehaviour
     {
         isMultipleBallsActive = false;
         isSticky = false;
+        activeBalls.Add(ballPrefab);
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
 
@@ -60,16 +62,43 @@ public class MainManager : MonoBehaviour
     }
     public void OnThreeBallsActivate()
     {
-        ball.SpawnMultipleBalls(2); 
-        StartCoroutine(ThreeBallsTimer());
+        if(activeBalls.Count>1)
+        {
+            isMultipleBallsActive = true;
+        }
+
+        // Create two new balls
+        for (int i = 0; i < 2; i++)
+        {
+            Ball newBall = Instantiate(ballPrefab, ballPrefab.transform.position, Quaternion.identity);
+            //RegisterBall(newBall);
+            newBall.Initialize(this);
+        }
+
+        // Start the timer to destroy extra balls
+        //StartCoroutine(ThreeBallsTimer());
     }
 
-    IEnumerator ThreeBallsTimer()
-    {
-        isMultipleBallsActive = true ;
-        yield return new WaitForSeconds(2);
-        isMultipleBallsActive = false ;
-    }
+    //IEnumerator ThreeBallsTimer()
+    //{
+    //    yield return new WaitForSeconds(2);
+    //    DeregisterBall(ballPrefab);
+    //    isMultipleBallsActive = false;
+    //}
+    //public void RegisterBall(Ball newBall)
+    //{
+    //    activeBalls.Add(newBall);
+    //}
+
+    //public void DeregisterBall(Ball ball)
+    //{
+    //    for (int i = activeBalls.Count - 1; i > 0; i--) // Iterate in reverse to safely remove items
+    //    {
+    //        Ball extraBall = activeBalls[i];
+    //        Destroy(extraBall.gameObject); // Destroy the ball GameObject
+    //    }
+    //    activeBalls.Remove(ball);
+    //}
 
     private void Update()
     {
@@ -126,12 +155,10 @@ public class MainManager : MonoBehaviour
 
     public void GameOver()
     {
-        if (isMultipleBallsActive == true)
+        if (activeBalls.Count == 0)
         {
-            m_GameOver = false;
+          m_GameOver = true; 
         }
-        else if (isMultipleBallsActive == false) 
-        { m_GameOver = true; }
         UpdateHighScore();
         GameOverText.SetActive(true);
     }

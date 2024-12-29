@@ -9,7 +9,12 @@ public class DeathZone : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        Destroy(other.gameObject);
+        GameObject[] balls = GameObject.FindGameObjectsWithTag("Ball");
+
+        if (!(balls.Length > 1))
+        {
         Manager.GameOver();
+        }
+        Destroy(other.gameObject);
     }
 }

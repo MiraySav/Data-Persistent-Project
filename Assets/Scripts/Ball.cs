@@ -11,12 +11,20 @@ public class Ball : MonoBehaviour
     private Transform paddle;
     public MainManager manager;
     private bool shouldStickAgain;
+    public int ballcount = 3;
+    public bool isMainBall;
 
 
     void Start()
     {
+        isMainBall = true;
         shouldStickAgain = true;
         m_Rigidbody = GetComponent<Rigidbody>();
+    }
+    public void Initialize(MainManager manager)
+    {
+        this.manager = manager; // Assign the MainManager instance
+        //manager.RegisterBall(this);
     }
     private void Update()
     {
@@ -44,6 +52,16 @@ public class Ball : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             GameObject newBall = Instantiate(gameObject, transform.position, Quaternion.identity);
+
+            //Ball newBallComponent = newBall.GetComponent<Ball>();
+
+            //// Initialize and register the new ball
+            //if (newBallComponent != null)
+            //{
+            //    newBallComponent.Initialize(manager);
+            //    manager.RegisterBall(newBallComponent);
+            //}
+
             Rigidbody newBallRb = newBall.GetComponent<Rigidbody>();
 
             if (newBallRb != null)
@@ -75,7 +93,22 @@ public class Ball : MonoBehaviour
 
         m_Rigidbody.velocity = velocity;
     }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.CompareTag("DeathZone"))
+    //{
+    //    manager.DeregisterBall(this); // Deregister the ball that falls
 
+    //    if (!isMainBall) // If it's not the main ball, just destroy it
+    //    {
+    //        Destroy(gameObject);
+    //    }
+    //    else if (manager.activeBalls.Count == 0) // If all balls (including the main ball) are gone
+    //    {
+    //        manager.GameOver();
+    //    }
+    //}
+    //}
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))

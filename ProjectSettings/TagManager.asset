@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Powerup
+  - DeathZone
+  - Ball
   layers:
   - Default
   - TransparentFX
